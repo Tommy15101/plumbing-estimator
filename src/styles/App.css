@@ -1,0 +1,11 @@
+main {
+  margin-top: 64px; /* Adjust based on the height of the AppBar */
+}
+
+.container {
+  padding: 20px;
+}
+.paper {
+  padding: 20px;
+  margin-bottom: 20px;
+}
