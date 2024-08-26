@@ -4,6 +4,7 @@ import { useState } from "react";
 
 const useCart = () => {
   const [cart, setCart] = useState({
+    system: [],
     materials: [],
     equipment: [],
     reminders: [],
@@ -11,11 +12,25 @@ const useCart = () => {
     clauses: [],
   });
 
-  const addToCart = (category, item) => {
-    setCart((prevCart) => ({
-      ...prevCart,
-      [category]: [...prevCart[category], item],
-    }));
+  const toggleItemInCart = (category, item) => {
+    setCart((prevCart) => {
+      const isItemInCart = prevCart[category].includes(item);
+      if (isItemInCart) {
+        // Remove item from cart
+        return {
+          ...prevCart,
+          [category]: prevCart[category].filter(
+            (cartItem) => cartItem !== item
+          ),
+        };
+      } else {
+        // Add item to cart
+        return {
+          ...prevCart,
+          [category]: [...prevCart[category], item],
+        };
+      }
+    });
   };
 
   const removeFromCart = (category, index) => {
@@ -27,6 +42,7 @@ const useCart = () => {
 
   const clearCart = () => {
     setCart({
+      system: [],
       materials: [],
       equipment: [],
       reminders: [],
@@ -35,7 +51,7 @@ const useCart = () => {
     });
   };
 
-  return { cart, addToCart, removeFromCart, clearCart };
+  return { cart, toggleItemInCart, removeFromCart, clearCart };
 };
 
 export default useCart;

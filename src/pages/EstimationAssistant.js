@@ -19,8 +19,9 @@ import {
   TextField,
   Box,
   IconButton,
+  Chip,
 } from "@mui/material";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Close as CloseIcon, Clear as ClearIcon } from "@mui/icons-material";
 import { styled } from "@mui/system";
 import jobTypes from "../data/jobTypesData"; // Adjust the path as needed
 import useCart from "../hooks/useCart";
@@ -42,13 +43,31 @@ const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
   justifyContent: "space-between",
 }));
 
+const ClearButton = styled(IconButton)(({ theme }) => ({
+  color: theme.palette.error.main,
+  backgroundColor: theme.palette.common.white,
+  borderRadius: "50%",
+  padding: "4px",
+  marginLeft: "8px", // Margin to the left
+  minWidth: 24,
+  minHeight: 24,
+  "&:hover": {
+    backgroundColor: theme.palette.error.main, // Red background on hover
+    color: theme.palette.common.white, // White text/icon on hover
+  },
+  "& svg": {
+    fontSize: 16,
+  },
+}));
+
 const EstimationAssistant = () => {
   const [jobType, setJobType] = useState("");
+  const [systemType, setSystemType] = useState("");
   const [jobNumber, setJobNumber] = useState("");
   const [jobNotes, setJobNotes] = useState("");
   const [openModal, setOpenModal] = useState(false);
 
-  const { cart, addToCart, removeFromCart, clearCart } = useCart();
+  const { cart, toggleItemInCart, removeFromCart, clearCart } = useCart();
   const { handleDownloadPDF } = usePDF(jobType, jobNumber, jobNotes, cart);
 
   const handleJobTypeChange = (event) => {
@@ -63,12 +82,30 @@ const EstimationAssistant = () => {
     setJobNotes(event.target.value);
   };
 
+  const handleClearJobNumber = () => {
+    setJobNumber("");
+  };
+
+  const handleClearJobNotes = () => {
+    setJobNotes("");
+  };
+
   const HandleClearAndCloseCart = () => {
     clearCart();
     setOpenModal(false);
   };
 
   const selectedJobType = jobTypes[jobType] || {};
+  const selectedSystemType =
+    systemType === "default"
+      ? selectedJobType[
+          Object.keys(selectedJobType)[
+            Math.floor(Math.random() * Object.keys(selectedJobType).length)
+          ]
+        ]
+      : selectedJobType[systemType] || {};
+
+  const isItemInCart = (category, item) => cart[category]?.includes(item);
 
   return (
     <Container>
@@ -95,108 +132,103 @@ const EstimationAssistant = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12} md={6}>
+          <FormControl fullWidth margin="normal" disabled={!jobType}>
+            <InputLabel id="system-type-label">Select System Type</InputLabel>
+            <Select
+              labelId="system-type-label"
+              value={systemType}
+              onChange={(e) => setSystemType(e.target.value)}
+              label="Select System Type"
+            >
+              {Object.keys(selectedJobType).map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
+              <MenuItem value="default">Default</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={6}>
           <Box display="flex" flexDirection="column" gap={2}>
-            <TextField
-              label="Job Number"
-              variant="outlined"
-              fullWidth
-              value={jobNumber}
-              onChange={handleJobNumberChange}
-            />
-            <TextField
-              label="Job Notes / Description"
-              variant="outlined"
-              multiline
-              rows={4}
-              fullWidth
-              value={jobNotes}
-              onChange={handleJobNotesChange}
-            />
+            <Box display="flex" alignItems="center">
+              <TextField
+                label="Job Number"
+                variant="outlined"
+                fullWidth
+                value={jobNumber}
+                onChange={handleJobNumberChange}
+              />
+              <ClearButton onClick={handleClearJobNumber}>
+                <ClearIcon />
+              </ClearButton>
+            </Box>
+            <Box display="flex" alignItems="center">
+              <TextField
+                label="Job Notes / Description"
+                variant="outlined"
+                multiline
+                rows={4}
+                fullWidth
+                value={jobNotes}
+                onChange={handleJobNotesChange}
+              />
+              <ClearButton onClick={handleClearJobNotes}>
+                <ClearIcon />
+              </ClearButton>
+            </Box>
           </Box>
         </Grid>
       </Grid>
-
       <Grid container spacing={2} marginTop={2}>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Material Ideas</Typography>
-              {selectedJobType.materials?.map((material, index) => (
-                <Button
-                  key={index}
-                  fullWidth
-                  onClick={() => addToCart("materials", material)}
-                >
-                  {material}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Equipment Ideas</Typography>
-              {selectedJobType.equipment?.map((equipment, index) => (
-                <Button
-                  key={index}
-                  fullWidth
-                  onClick={() => addToCart("equipment", equipment)}
-                >
-                  {equipment}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Reminders</Typography>
-              {selectedJobType.reminders?.map((reminder, index) => (
-                <Button
-                  key={index}
-                  fullWidth
-                  onClick={() => addToCart("reminders", reminder)}
-                >
-                  {reminder}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Subcontractors</Typography>
-              {selectedJobType.subcontractors?.map((subcontractor, index) => (
-                <Button
-                  key={index}
-                  fullWidth
-                  onClick={() => addToCart("subcontractors", subcontractor)}
-                >
-                  {subcontractor}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6">Clauses</Typography>
-              {selectedJobType.clauses?.map((clause, index) => (
-                <Button
-                  key={index}
-                  fullWidth
-                  onClick={() => addToCart("clauses", clause)}
-                >
-                  {clause}
-                </Button>
-              ))}
-            </CardContent>
-          </Card>
-        </Grid>
+        {[
+          "materials",
+          "equipment",
+          "reminders",
+          "subcontractors",
+          "clauses",
+        ].map(
+          (category) =>
+            selectedSystemType[category]?.length > 0 && (
+              <Grid item xs={12} md={4} key={category}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h6">
+                      {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </Typography>
+                    {selectedSystemType[category].map((item, index) => (
+                      <Box
+                        key={index}
+                        display="flex"
+                        alignItems="center"
+                        marginBottom={1}
+                      >
+                        <Button
+                          fullWidth
+                          onClick={() => toggleItemInCart(category, item)}
+                          variant={
+                            isItemInCart(category, item)
+                              ? "outlined"
+                              : "contained"
+                          }
+                        >
+                          {item}
+                        </Button>
+                        {isItemInCart(category, item) && (
+                          <Chip
+                            label="Added"
+                            color="success"
+                            size="small"
+                            sx={{ marginLeft: 1 }}
+                          />
+                        )}
+                      </Box>
+                    ))}
+                  </CardContent>
+                </Card>
+              </Grid>
+            )
+        )}
       </Grid>
 
       <Box marginTop={2}>
