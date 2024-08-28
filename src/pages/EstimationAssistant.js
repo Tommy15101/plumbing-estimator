@@ -1,93 +1,93 @@
-// src/EstimationAssistant.js
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Box,
+  Tabs,
   Card,
   CardContent,
   Grid,
   Button,
   Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
-  Box,
   IconButton,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   Chip,
 } from "@mui/material";
-import { Close as CloseIcon, Clear as ClearIcon } from "@mui/icons-material";
-import { styled } from "@mui/system";
-import jobTypes from "../data/jobTypesData"; // Adjust the path as needed
+import {
+  TabContainer,
+  StyledTab,
+  ContentContainer,
+  StyledDialogActions,
+  StyledDialogTitle,
+  StyledDialogContent,
+  ClearButton,
+} from "../styles/EstimationAssistantTesting";
+import {
+  Add as AddIcon,
+  Close as CloseIcon,
+  Edit as EditIcon,
+  Clear as ClearIcon,
+} from "@mui/icons-material";
+// import { styled } from "@mui/system";
+import jobTypes from "../data/jobTypesData"; // Ensure correct path
 import useCart from "../hooks/useCart";
 import usePDF from "../hooks/usePDF";
 
-// Styled Components
-const StyledDialogTitle = styled(DialogTitle)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-  color: theme.palette.common.white,
-  position: "relative",
-}));
-
-const StyledDialogContent = styled(DialogContent)(({ theme }) => ({
-  padding: theme.spacing(2),
-}));
-
-const StyledDialogActions = styled(DialogActions)(({ theme }) => ({
-  padding: theme.spacing(1),
-  justifyContent: "space-between",
-}));
-
-const ClearButton = styled(IconButton)(({ theme }) => ({
-  color: theme.palette.error.main,
-  backgroundColor: theme.palette.common.white,
-  borderRadius: "50%",
-  padding: "4px",
-  marginLeft: "8px", // Margin to the left
-  minWidth: 24,
-  minHeight: 24,
-  "&:hover": {
-    backgroundColor: theme.palette.error.main, // Red background on hover
-    color: theme.palette.common.white, // White text/icon on hover
-  },
-  "& svg": {
-    fontSize: 16,
-  },
-}));
-
-const EstimationAssistant = () => {
-  const [jobType, setJobType] = useState("");
-  const [systemType, setSystemType] = useState("");
-  const [jobNumber, setJobNumber] = useState("");
-  const [jobNotes, setJobNotes] = useState("");
+// STATE MANAGEMENT //
+const EstimationAssistantTesting = () => {
+  const [tabs, setTabs] = useState([
+    {
+      name: "Job 1",
+      data: { jobType: "", systemType: "", jobNumber: "", jobNotes: "" },
+    },
+  ]);
+  const [currentTab, setCurrentTab] = useState(0);
+  const [newJobName, setNewJobName] = useState("");
   const [openModal, setOpenModal] = useState(false);
 
   const { cart, toggleItemInCart, removeFromCart, clearCart } = useCart();
-  const { handleDownloadPDF } = usePDF(jobType, jobNumber, jobNotes, cart);
+  const { handleDownloadPDF } = usePDF(
+    tabs[currentTab]?.data?.jobType || "",
+    tabs[currentTab]?.data?.jobNumber || "",
+    tabs[currentTab]?.data?.jobNotes || "",
+    cart
+  );
 
-  const handleJobTypeChange = (event) => {
-    setJobType(event.target.value);
+  useEffect(() => {
+    console.log("Current Tabs:", tabs);
+    console.log("Current Tab Index:", currentTab);
+    console.log(
+      "Selected Job Type Data:",
+      tabs[currentTab]?.data?.jobType
+        ? jobTypes[tabs[currentTab]?.data?.jobType]
+        : {}
+    );
+  }, [tabs, currentTab]);
+
+  const isItemInCart = (category, item) => cart[category]?.includes(item);
+
+  const handleClearJobNumberField = () => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab, index) =>
+        index === currentTab
+          ? { ...tab, data: { ...tab.data, jobNumber: "" } }
+          : tab
+      )
+    );
   };
 
-  const handleJobNumberChange = (event) => {
-    setJobNumber(event.target.value);
-  };
-
-  const handleJobNotesChange = (event) => {
-    setJobNotes(event.target.value);
-  };
-
-  const handleClearJobNumber = () => {
-    setJobNumber("");
-  };
-
-  const handleClearJobNotes = () => {
-    setJobNotes("");
+  const handleClearNotesField = () => {
+    setTabs((prevTabs) =>
+      prevTabs.map((tab, index) =>
+        index === currentTab
+          ? { ...tab, data: { ...tab.data, jobNotes: "" } }
+          : tab
+      )
+    );
   };
 
   const HandleClearAndCloseCart = () => {
@@ -95,17 +95,91 @@ const EstimationAssistant = () => {
     setOpenModal(false);
   };
 
-  const selectedJobType = jobTypes[jobType] || {};
-  const selectedSystemType =
-    systemType === "default"
-      ? selectedJobType[
-          Object.keys(selectedJobType)[
-            Math.floor(Math.random() * Object.keys(selectedJobType).length)
-          ]
-        ]
-      : selectedJobType[systemType] || {};
+  const handleTabChange = (event, newValue) => {
+    setCurrentTab(newValue);
+  };
 
-  const isItemInCart = (category, item) => cart[category]?.includes(item);
+  const handleAddJob = () => {
+    const newJobName = `Job ${tabs.length + 1}`;
+    setTabs([
+      ...tabs,
+      {
+        name: newJobName,
+        data: { jobType: "", systemType: "", jobNumber: "", jobNotes: "" },
+      },
+    ]);
+    setCurrentTab(tabs.length);
+  };
+
+  const handleEditJob = (index) => {
+    setNewJobName(tabs[index].name);
+    // Set index in state if you need to handle edit logic
+  };
+
+  const handleDeleteTab = (index) => {
+    setTabs(tabs.filter((_, i) => i !== index));
+    if (currentTab === index) {
+      setCurrentTab((prev) => (prev > 0 ? prev - 1 : 0));
+    }
+  };
+
+  const handleJobTypeChange = (event) => {
+    const selectedJobType = event.target.value;
+    setTabs(
+      tabs.map((tab, index) =>
+        index === currentTab
+          ? {
+              ...tab,
+              name: selectedJobType,
+              data: { ...tab.data, jobType: selectedJobType },
+            }
+          : tab
+      )
+    );
+  };
+
+  const handleSystemTypeChange = (event) => {
+    const selectedSystemType = event.target.value;
+    setTabs(
+      tabs.map((tab, index) =>
+        index === currentTab
+          ? { ...tab, data: { ...tab.data, systemType: selectedSystemType } }
+          : tab
+      )
+    );
+  };
+
+  const handleJobNumberChange = (event) => {
+    const jobNumber = event.target.value;
+    setTabs(
+      tabs.map((tab, index) =>
+        index === currentTab
+          ? { ...tab, data: { ...tab.data, jobNumber: jobNumber } }
+          : tab
+      )
+    );
+  };
+
+  const handleJobNotesChange = (event) => {
+    const jobNotes = event.target.value;
+    setTabs(
+      tabs.map((tab, index) =>
+        index === currentTab
+          ? { ...tab, data: { ...tab.data, jobNotes: jobNotes } }
+          : tab
+      )
+    );
+  };
+
+  // Access the data for the active tab
+  const { jobType, jobNumber, jobNotes } = tabs[currentTab].data;
+
+  const selectedJobType = tabs[currentTab]?.data?.jobType
+    ? jobTypes[tabs[currentTab]?.data?.jobType]
+    : {};
+  const selectedSystemType = tabs[currentTab]?.data?.systemType
+    ? selectedJobType[tabs[currentTab]?.data?.systemType] || {}
+    : {};
 
   return (
     <Container>
@@ -113,152 +187,198 @@ const EstimationAssistant = () => {
         Estimation Assistant
       </Typography>
 
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal">
-            <InputLabel id="job-type-label">Select Job Type</InputLabel>
-            <Select
-              labelId="job-type-label"
-              value={jobType}
-              onChange={handleJobTypeChange}
-              label="Select Job Type"
-            >
-              {Object.keys(jobTypes).map((type) => (
-                <MenuItem key={type} value={type}>
-                  {type}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <FormControl fullWidth margin="normal" disabled={!jobType}>
-            <InputLabel id="system-type-label">Select System Type</InputLabel>
-            <Select
-              labelId="system-type-label"
-              value={systemType}
-              onChange={(e) => setSystemType(e.target.value)}
-              label="Select System Type"
-            >
-              {Object.keys(selectedJobType).map((type) => (
-                <MenuItem key={type} value={type}>
-                  {type}
-                </MenuItem>
-              ))}
-              <MenuItem value="default">Default</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Box display="flex" flexDirection="column" gap={2}>
-            <Box display="flex" alignItems="center">
+      <TabContainer>
+        <Tabs
+          value={currentTab}
+          onChange={handleTabChange}
+          aria-label="job tabs"
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {tabs.map((tab, index) => (
+            <StyledTab
+              key={index}
+              label={
+                <Box display="flex" alignItems="center">
+                  {tab.name}
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleEditJob(index);
+                    }}
+                    sx={{ marginLeft: 1 }}
+                  >
+                    <EditIcon fontSize="small" />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteTab(index);
+                    }}
+                    sx={{ marginLeft: 1 }}
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+              }
+              isSelected={currentTab === index}
+            />
+          ))}
+          <StyledTab
+            label={
+              <Button
+                variant="contained"
+                onClick={handleAddJob}
+                startIcon={<AddIcon />}
+              >
+                Add Job
+              </Button>
+            }
+            isSelected={false}
+            sx={{ borderBottom: "none" }}
+          />
+        </Tabs>
+      </TabContainer>
+
+      {tabs[currentTab] && (
+        <ContentContainer>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="job-type-label">Select Job Type</InputLabel>
+                <Select
+                  labelId="job-type-label"
+                  value={tabs[currentTab]?.data?.jobType || ""}
+                  onChange={handleJobTypeChange}
+                  label="Select Job Type"
+                >
+                  {Object.keys(jobTypes).map((type) => (
+                    <MenuItem key={type} value={type}>
+                      {type}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="system-type-label">
+                  Select System Type
+                </InputLabel>
+                <Select
+                  labelId="system-type-label"
+                  value={tabs[currentTab]?.data?.systemType || ""}
+                  onChange={handleSystemTypeChange}
+                  label="Select System Type"
+                >
+                  {Object.keys(selectedJobType).map((type) => (
+                    <MenuItem key={type} value={type}>
+                      {type}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2} marginTop={2}>
+            <Grid item xs={12}>
               <TextField
                 label="Job Number"
                 variant="outlined"
                 fullWidth
-                value={jobNumber}
+                value={tabs[currentTab]?.data?.jobNumber || ""}
                 onChange={handleJobNumberChange}
               />
-              <ClearButton onClick={handleClearJobNumber}>
+              <ClearButton onClick={handleClearJobNumberField}>
                 <ClearIcon />
               </ClearButton>
-            </Box>
-            <Box display="flex" alignItems="center">
+            </Grid>
+            <Grid item xs={12}>
               <TextField
-                label="Job Notes / Description"
+                label="Job Notes"
                 variant="outlined"
+                fullWidth
                 multiline
                 rows={4}
-                fullWidth
-                value={jobNotes}
+                value={tabs[currentTab]?.data?.jobNotes || ""}
                 onChange={handleJobNotesChange}
               />
-              <ClearButton onClick={handleClearJobNotes}>
+              <ClearButton onClick={handleClearNotesField}>
                 <ClearIcon />
               </ClearButton>
-            </Box>
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid container spacing={2} marginTop={2}>
-        {[
-          "materials",
-          "equipment",
-          "reminders",
-          "subcontractors",
-          "clauses",
-        ].map(
-          (category) =>
-            selectedSystemType[category]?.length > 0 && (
-              <Grid item xs={12} md={4} key={category}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h6">
-                      {category.charAt(0).toUpperCase() + category.slice(1)}
-                    </Typography>
-                    {selectedSystemType[category].map((item, index) => (
-                      <Box
-                        key={index}
-                        display="flex"
-                        alignItems="center"
-                        marginBottom={1}
-                      >
-                        <Button
-                          fullWidth
-                          onClick={() => toggleItemInCart(category, item)}
-                          variant={
-                            isItemInCart(category, item)
-                              ? "outlined"
-                              : "contained"
-                          }
-                        >
-                          {item}
-                        </Button>
-                        {isItemInCart(category, item) && (
-                          <Chip
-                            label="Added"
-                            color="success"
-                            size="small"
-                            sx={{ marginLeft: 1 }}
-                          />
-                        )}
-                      </Box>
-                    ))}
-                  </CardContent>
-                </Card>
-              </Grid>
-            )
-        )}
-      </Grid>
+            </Grid>
+          </Grid>
 
-      <Box marginTop={2}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setOpenModal(true)}
-        >
-          View Cart
-        </Button>
-      </Box>
+          <Box marginTop={2}>
+            <Grid container spacing={2} marginTop={2}>
+              {[
+                "materials",
+                "equipment",
+                "reminders",
+                "subcontractors",
+                "Time Optimizer",
+              ].map(
+                (category) =>
+                  selectedSystemType[category]?.length > 0 && (
+                    <Grid item xs={12} md={4} key={category}>
+                      <Card>
+                        <CardContent>
+                          <Typography variant="h6">
+                            {category.charAt(0).toUpperCase() +
+                              category.slice(1)}
+                          </Typography>
+                          {selectedSystemType[category].map((item, index) => (
+                            <Box
+                              key={index}
+                              display="flex"
+                              alignItems="center"
+                              marginBottom={1}
+                            >
+                              <Button
+                                fullWidth
+                                onClick={() => toggleItemInCart(category, item)}
+                                variant={
+                                  isItemInCart(category, item)
+                                    ? "outlined"
+                                    : "contained"
+                                }
+                              >
+                                {item}
+                              </Button>
+                              {isItemInCart(category, item) && (
+                                <Chip
+                                  label="Added"
+                                  color="success"
+                                  size="small"
+                                  sx={{ marginLeft: 1 }}
+                                />
+                              )}
+                            </Box>
+                          ))}
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  )
+              )}
+            </Grid>
+          </Box>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setOpenModal(true)}
+            sx={{ marginTop: 2 }}
+          >
+            View Cart
+          </Button>
+        </ContentContainer>
+      )}
 
       <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-        <StyledDialogTitle>
-          Estimation Assistant
-          <IconButton
-            edge="end"
-            color="inherit"
-            onClick={() => setOpenModal(false)}
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </StyledDialogTitle>
+        <StyledDialogTitle>Cart Summary</StyledDialogTitle>
         <StyledDialogContent>
           <Typography variant="h6">Job Details</Typography>
           {jobType && <Typography>Job Type: {jobType}</Typography>}
@@ -310,4 +430,4 @@ const EstimationAssistant = () => {
   );
 };
 
-export default EstimationAssistant;
+export default EstimationAssistantTesting;

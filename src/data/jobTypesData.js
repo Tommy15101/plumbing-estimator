@@ -2,6 +2,7 @@ const jobTypes = {
   "Hot Water System": {
     "Electric Storage": {
       materials: [
+        "Mildred Valve",
         "Quickie Kit",
         "ECV",
         "PTR",
@@ -9,10 +10,14 @@ const jobTypes = {
         "Lagging",
         "Slab / Pizza Base",
       ],
-      equipment: ["Trailer", "Trolley Jack"],
-      reminders: ["Order Materils", "Deliveries"],
+      equipment: ["Trailer", "Trolley Jack", "Skip Bin"],
+      reminders: [
+        "Order Materils",
+        "Deliveries",
+        "Check Electrical Circuit Size",
+      ],
       subcontractors: ["Electrical", "Carpentry"],
-      clauses: ["Insert AS3500 Clauses", "Insert Reminders / Regulations"],
+      "Time Optimizer": ["Order Materials"],
     },
     "Gas Storage": {
       materials: [
@@ -23,14 +28,33 @@ const jobTypes = {
         "Lagging",
         "Slab / Pizza Base",
       ],
-      equipment: ["Trailer", "Trolley Jack"],
+      equipment: ["Trailer", "Trolley Jack", "Skip Bin"],
       reminders: ["Gas Regulator Chcek", "System Compliance"],
       subcontractors: ["Electrical", "Carpentry"],
-      clauses: ["Insert AS3500 Clauses", "Insert Reminders / Regulations"],
+      "Time Optimizer": [
+        "Insert AS3500 Time Optimizer",
+        "Insert Reminders / Regulations",
+      ],
+    },
+    Solar: {
+      materials: [
+        "ECV",
+        "PTR",
+        "High Rated Tempering Valve",
+        "Lagging",
+        "High Temp Press Fittings",
+      ],
+      equipment: ["Trailer", "Trolley Jack", "Crane Hire"],
+      reminders: ["System Compliance"],
+      subcontractors: ["Electrical", "Carpentry"],
+      "Time Optimizer": [
+        "Insert AS3500 Time Optimizer",
+        "Insert Reminders / Regulations",
+      ],
     },
     "Instatnaneous / Continuous Flow": {
       materials: ["Tempering Valve", "Lagging"],
-      equipment: ["Trailer"],
+      equipment: ["Trailer", "Trolley Jack", "Skip Bin"],
       reminders: [
         "Exclusion Zones",
         "Gas Regulator Check",
@@ -38,7 +62,10 @@ const jobTypes = {
         "System Size",
       ],
       subcontractors: ["Electrical", "Carpentry"],
-      clauses: ["Insert AS3500 Clauses", "Insert Reminders / Regulations"],
+      "Time Optimizer": [
+        "Insert AS3500 Time Optimizer",
+        "Insert Reminders / Regulations",
+      ],
     },
   },
 
@@ -50,8 +77,6 @@ const jobTypes = {
         "Elbows",
         "Tees",
         "Saddle Clips",
-        "Brazing Rods",
-        "Pipe Insulation",
         "Wall Plate Elbows",
       ],
       equipment: [
@@ -61,16 +86,12 @@ const jobTypes = {
         "Press Tool",
         "Stud Finder",
       ],
-      reminders: [
-        "Check for wall studs and avoid damaging structural elements",
-        "Pressure test the system",
-        "Ensure pipe insulation for energy efficiency",
-      ],
+      reminders: ["Customer Supplied Mixers"],
       subcontractors: [
         "Carpentry (for wall access)",
         "Tiling (if affecting wall tiles)",
       ],
-      clauses: [
+      "Time Optimizer": [
         "Ensure compliance with AS3500.1 for water services",
         "Adhere to local council regulations for plumbing rough-ins",
       ],
@@ -83,7 +104,7 @@ const jobTypes = {
         "Check for any leaks after installation",
       ],
       subcontractors: [],
-      clauses: [
+      "Time Optimizer": [
         "Ensure tapware complies with WELS rating",
         "Check compliance with AS/NZS 6400",
       ],
@@ -102,7 +123,9 @@ const jobTypes = {
         "Ensure proper alignment",
       ],
       subcontractors: ["Tiling (if needed)"],
-      clauses: ["Ensure compliance with AS3500.1 and local plumbing codes"],
+      "Time Optimizer": [
+        "Ensure compliance with AS3500.1 and local plumbing codes",
+      ],
     },
     "Water Service Replacement": {
       materials: [
@@ -124,7 +147,7 @@ const jobTypes = {
         "Update the property's water service diagram",
       ],
       subcontractors: ["Excavation"],
-      clauses: [
+      "Time Optimizer": [
         "Adhere to AS3500.1 for water supply installation",
         "Ensure compliance with backflow prevention regulations",
       ],
@@ -149,7 +172,7 @@ const jobTypes = {
         "Flush the system after installation",
       ],
       subcontractors: ["Electrical (for pump connection)"],
-      clauses: [
+      "Time Optimizer": [
         "Ensure installation complies with AS3500.1 and AS3000 (for electrical work)",
       ],
     },
@@ -170,7 +193,7 @@ const jobTypes = {
         "Check for leaks",
       ],
       subcontractors: [],
-      clauses: [
+      "Time Optimizer": [
         "Ensure compliance with AS5601 for gas installations",
         "Adhere to local gas safety regulations",
       ],
@@ -193,7 +216,7 @@ const jobTypes = {
         "Check appliance connections and settings",
       ],
       subcontractors: ["Electrical (for dual-fuel or electric ovens)"],
-      clauses: [
+      "Time Optimizer": [
         "Ensure compliance with AS5601 and AS3000 (if electrical)",
         "Check manufacturer’s installation guidelines",
       ],
@@ -217,7 +240,7 @@ const jobTypes = {
         "Check for leaks",
       ],
       subcontractors: ["Excavation"],
-      clauses: [
+      "Time Optimizer": [
         "Adhere to AS5601 for gas installations",
         "Ensure compliance with local gas safety regulations",
       ],
@@ -241,7 +264,7 @@ const jobTypes = {
         "Test system for leaks and performance",
       ],
       subcontractors: ["Electrical (if system includes electric ignition)"],
-      clauses: [
+      "Time Optimizer": [
         "Ensure compliance with AS3500.4 and AS5601",
         "Adhere to manufacturer’s installation guidelines",
       ],
@@ -263,7 +286,7 @@ const jobTypes = {
         "Ensure correct fall for sewer lines",
       ],
       subcontractors: ["Excavation"],
-      clauses: [
+      "Time Optimizer": [
         "Ensure compliance with AS3500.2 for sanitary plumbing and drainage",
       ],
     },
@@ -280,7 +303,9 @@ const jobTypes = {
         "Check for blockages or damage",
       ],
       subcontractors: [],
-      clauses: ["Adhere to AS3500.2 for sanitary plumbing and drainage"],
+      "Time Optimizer": [
+        "Adhere to AS3500.2 for sanitary plumbing and drainage",
+      ],
     },
   },
 
@@ -294,7 +319,9 @@ const jobTypes = {
         "Install erosion control measures if required",
       ],
       subcontractors: ["Excavation"],
-      clauses: ["Ensure compliance with AS3500.3 for stormwater drainage"],
+      "Time Optimizer": [
+        "Ensure compliance with AS3500.3 for stormwater drainage",
+      ],
     },
     "Stormwater To Street / Tank": {
       materials: [
@@ -309,7 +336,7 @@ const jobTypes = {
         "Ensure correct pipe gradients",
       ],
       subcontractors: ["Excavation"],
-      clauses: [
+      "Time Optimizer": [
         "Adhere to AS3500.3 for stormwater drainage",
         "Check compliance with local council requirements",
       ],
@@ -331,7 +358,7 @@ const jobTypes = {
         "Dispose of old materials properly",
       ],
       subcontractors: ["Scaffolding", "Roofing Specialist"],
-      clauses: [
+      "Time Optimizer": [
         "Ensure compliance with AS1562 for roof installation",
         "Adhere to safety standards for working at heights",
       ],
@@ -344,7 +371,9 @@ const jobTypes = {
         "Ensure correct fall for gutters",
       ],
       subcontractors: [],
-      clauses: ["Ensure compliance with AS3500.3 for stormwater drainage"],
+      "Time Optimizer": [
+        "Ensure compliance with AS3500.3 for stormwater drainage",
+      ],
     },
     "Roof/Gutter Repairs": {
       materials: [
@@ -359,7 +388,7 @@ const jobTypes = {
         "Ensure safety measures are in place",
       ],
       subcontractors: [],
-      clauses: [
+      "Time Optimizer": [
         "Adhere to AS1562 for roof repairs",
         "Check compliance with local council requirements",
       ],
@@ -386,7 +415,7 @@ const jobTypes = {
         "Conduct initial plant setup and testing",
       ],
       subcontractors: ["Excavation", "Electrical"],
-      clauses: [
+      "Time Optimizer": [
         "Ensure compliance with AS1547 for on-site wastewater management",
       ],
     },
@@ -408,7 +437,7 @@ const jobTypes = {
         "Ensure proper decommissioning of old plant",
       ],
       subcontractors: ["Excavation", "Electrical"],
-      clauses: ["Adhere to AS1547 for on-site wastewater management"],
+      "Time Optimizer": ["Adhere to AS1547 for on-site wastewater management"],
     },
   },
 
@@ -426,7 +455,7 @@ const jobTypes = {
         "Ensure proper location and installation",
       ],
       subcontractors: ["Excavation"],
-      clauses: [
+      "Time Optimizer": [
         "Ensure compliance with AS3500.2 and local trade waste requirements",
       ],
     },
@@ -443,7 +472,62 @@ const jobTypes = {
         "Ensure proper installation and testing",
       ],
       subcontractors: ["Excavation"],
-      clauses: ["Adhere to AS3500.2 and local trade waste requirements"],
+      "Time Optimizer": [
+        "Adhere to AS3500.2 and local trade waste requirements",
+      ],
+    },
+  },
+  Renovation: {
+    Kitchen: {
+      materials: ["Timber / Noggins", "Pipes / Fittings"],
+      equipment: [
+        "Trailer",
+        "Trolley Jack",
+        "Skip Bin",
+        "Quick Cut",
+        "Jackhammer",
+      ],
+      reminders: [
+        "Order Materils",
+        "Deliveries",
+        "Customer Supplied Sink / Tapware",
+      ],
+      subcontractors: ["Electrical", "Carpentry"],
+      "Time Optimizer": ["Order Materials"],
+    },
+    Laundry: {
+      materials: ["Timber / Noggins", "Pipes / Fittings"],
+      equipment: [
+        "Trailer",
+        "Trolley Jack",
+        "Skip Bin",
+        "Quick Cut",
+        "Jackhammer",
+      ],
+      reminders: [
+        "Order Materils",
+        "Deliveries",
+        "Customer Supplied Sink / Tapware",
+      ],
+      subcontractors: ["Electrical", "Carpentry"],
+      "Time Optimizer": ["Order Materials"],
+    },
+    Bathroom: {
+      materials: ["Timber / Noggins", "Pipes / Fittings"],
+      equipment: [
+        "Trailer",
+        "Trolley Jack",
+        "Skip Bin",
+        "Quick Cut",
+        "Jackhammer",
+      ],
+      reminders: [
+        "Order Materils",
+        "Deliveries",
+        "Customer Supplied Sink / Tapware",
+      ],
+      subcontractors: ["Electrical", "Carpentry"],
+      "Time Optimizer": ["Order Materials"],
     },
   },
 };

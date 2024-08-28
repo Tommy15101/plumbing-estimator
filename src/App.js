@@ -4,7 +4,7 @@ import MainPage from "./components/MainPage";
 import EstimationAssistant from "./pages/EstimationAssistant";
 import Tools from "./pages/Tools";
 import Compliance from "./pages/Compliance";
-import Downloads from "./pages/Downloads";
+
 import Header from "./components/Header";
 import "./styles/App.css";
 
@@ -23,7 +23,6 @@ function App() {
           />
           <Route path="/tools" element={<Tools />} />
           <Route path="/compliance" element={<Compliance />} />
-          <Route path="/downloads" element={<Downloads />} />
         </Routes>
       </main>
     </Router>
