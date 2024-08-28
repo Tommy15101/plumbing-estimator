@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import VolumeCalculator from "../calculators/VolumeCalculator"; // Import the VolumeCalculator component
 import StormwaterPitCalculator from "../calculators/StormwaterPitCalculator";
+import ElectricalCalculator from "../calculators/ElectricalCalculator";
 
 const ToolsPage = () => {
   const tools = [
@@ -25,7 +26,11 @@ const ToolsPage = () => {
       description: "Calculate the required size and number of stormwater pits.",
       component: <StormwaterPitCalculator />, // Use the StormwaterCalculator component here
     },
-    { name: "Tool 3", description: "Description of Tool 3" },
+    {
+      name: "Electrical Calculator",
+      description: "Ensure a power circuit is okay for a HWS replacement",
+      component: <ElectricalCalculator />,
+    },
     { name: "Tool 4", description: "Description of Tool 4" },
   ];
 
