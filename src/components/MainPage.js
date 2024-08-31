@@ -144,7 +144,7 @@ const MainPage = () => {
                 size="small"
                 color="primary"
                 component={Link}
-                to="/downloads"
+                to="/resources"
               >
                 Get Resourceful Now!
               </Button>

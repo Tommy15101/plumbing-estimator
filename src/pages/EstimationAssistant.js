@@ -320,6 +320,7 @@ const EstimationAssistantTesting = () => {
                 "reminders",
                 "subcontractors",
                 "Time Optimizer",
+                "clauses",
               ].map(
                 (category) =>
                   selectedSystemType[category]?.length > 0 && (

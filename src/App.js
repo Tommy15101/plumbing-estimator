@@ -4,6 +4,7 @@ import MainPage from "./components/MainPage";
 import EstimationAssistant from "./pages/EstimationAssistant";
 import Tools from "./pages/Tools";
 import Compliance from "./pages/Compliance";
+import Resources from "./pages/Resources";
 
 import Header from "./components/Header";
 import "./styles/App.css";
@@ -21,6 +22,7 @@ function App() {
             path="/estimation-assistant"
             element={<EstimationAssistant />}
           />
+          <Route path="/resources" element={<Resources />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/compliance" element={<Compliance />} />
         </Routes>
