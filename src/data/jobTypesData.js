@@ -313,8 +313,14 @@ const jobTypes = {
 
   "Stormwater / Drainage": {
     "Drainage System Install": {
-      materials: ["PVC Pipe", "Drainage Pits", "Gullies", "Grates"],
-      equipment: ["Excavator", "Shovel", "Pipe Cutter", "Laser Level"],
+      materials: [
+        "Agi Pipe",
+        "20mm rock",
+        "Geotextile Fabric",
+        "Dog Bones",
+        "Duct Tape",
+      ],
+      equipment: ["Excavator", "Shovel", "Rakes"],
       reminders: [
         "Check local council stormwater requirements",
         "Ensure correct fall for drainage",

@@ -3,9 +3,11 @@ import { Container, Typography, Tabs, Tab, Box } from "@mui/material";
 import VolumeCalculator from "../calculators/VolumeCalculator";
 import StormwaterPitCalculator from "../calculators/StormwaterPitCalculator";
 import ElectricalCalculator from "../calculators/ElectricalCalculator";
+import ElectricalCalculatorAmps from "../calculators/ElectricalCalculatorAmps";
 import SewerCalculator from "../calculators/SewerCalculator";
 import StormwaterCalculator from "../calculators/StormwaterCalculator";
 import GradeCalculator from "../calculators/GradeCalculator";
+import StormwaterDrainageCalculator from "../calculators/StormwaterDrainageCalculator";
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
@@ -71,28 +73,33 @@ const ToolsPage = () => {
               aria-controls="tabpanel-0"
             />
             <Tab
-              label="Stormwater Pit Calculator"
+              label="Sewer Calculator"
               id="tab-1"
               aria-controls="tabpanel-1"
             />
             <Tab
-              label="Electrical Calculator"
+              label="Stormwater Drainage Calculator"
               id="tab-2"
+              aria-controls="tabpanel-1"
+            />
+            <Tab
+              label="Electrical Calculator"
+              id="tab-3"
               aria-controls="tabpanel-2"
             />
             <Tab
-              label="Sewer Calculator"
-              id="tab-3"
+              label="Grade Calculator"
+              id="tab-4"
               aria-controls="tabpanel-3"
             />
             <Tab
               label="Stormwater Calculator"
-              id="tab-4"
+              id="tab-5"
               aria-controls="tabpanel-4"
             />
             <Tab
-              label="Grade Calculator"
-              id="tab-5"
+              label="Stormwater Pit Calculator"
+              id="tab-6"
               aria-controls="tabpanel-5"
             />
           </Tabs>
@@ -103,19 +110,25 @@ const ToolsPage = () => {
         <VolumeCalculator />
       </TabPanel>
       <TabPanel value={value} index={1} id="tabpanel-1" aria-labelledby="tab-1">
-        <StormwaterPitCalculator />
+        <SewerCalculator />
       </TabPanel>
       <TabPanel value={value} index={2} id="tabpanel-2" aria-labelledby="tab-2">
+        <StormwaterDrainageCalculator />
+      </TabPanel>
+      <TabPanel value={value} index={3} id="tabpanel-3" aria-labelledby="tab-3">
         <ElectricalCalculator />
       </TabPanel>
       <TabPanel value={value} index={3} id="tabpanel-3" aria-labelledby="tab-3">
-        <SewerCalculator />
+        <ElectricalCalculatorAmps />
       </TabPanel>
       <TabPanel value={value} index={4} id="tabpanel-4" aria-labelledby="tab-4">
-        <StormwaterCalculator />
+        <GradeCalculator />
       </TabPanel>
       <TabPanel value={value} index={5} id="tabpanel-5" aria-labelledby="tab-5">
-        <GradeCalculator />
+        <StormwaterCalculator />
+      </TabPanel>
+      <TabPanel value={value} index={6} id="tabpanel-6" aria-labelledby="tab-6">
+        <StormwaterPitCalculator />
       </TabPanel>
     </Container>
   );

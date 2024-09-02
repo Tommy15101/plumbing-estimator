@@ -29,7 +29,7 @@ const CustomToggleButton = styled(ToggleButton)(({ selectedColor }) => ({
   },
 }));
 
-const DrainageCalculator = () => {
+const StormwaterDrainageCalculator = () => {
   const [trenchLength, setTrenchLength] = useState("");
   const [trenchWidth, setTrenchWidth] = useState("");
   const [trenchDepth, setTrenchDepth] = useState("");
@@ -61,8 +61,8 @@ const DrainageCalculator = () => {
     const pipeVolume = length * Math.PI * pipeRadius ** 2;
     const excavationVolume = length * width * depth;
 
-    const blueMetalBottom = 0.075; // m
-    const blueMetalTop = 0.075; // m
+    const blueMetalBottom = 0.1; // m
+    const blueMetalTop = 0.1; // m
 
     // Correct Blue Metal Volumes
     const blueMetalBottomVolume = length * width * blueMetalBottom;
@@ -90,34 +90,8 @@ const DrainageCalculator = () => {
   return (
     <Box padding={2} border={1} borderRadius={1} borderColor="grey.300">
       <Typography variant="h6" gutterBottom>
-        Sewer Calculator
+        Stormwater Drainage Calculator
       </Typography>
-
-      <FormControl fullWidth margin="normal">
-        <FormLabel component="legend">Select Drain Type</FormLabel>
-        <ToggleButtonGroup
-          value={drainType}
-          exclusive
-          onChange={(e, newType) => setDrainType(newType)}
-          aria-label="drain type"
-          style={{ marginBottom: "16px" }}
-        >
-          <CustomToggleButton
-            value="new"
-            aria-label="new drain section"
-            selectedColor="#4caf50" // Green for new drain section
-          >
-            New Drain Section
-          </CustomToggleButton>
-          <CustomToggleButton
-            value="replacement"
-            aria-label="replacement drain section"
-            selectedColor="#4caf50" // Red for replacement drain section
-          >
-            Replacement Drain Section
-          </CustomToggleButton>
-        </ToggleButtonGroup>
-      </FormControl>
 
       <FormControl fullWidth margin="normal">
         <TextField
@@ -200,6 +174,12 @@ const DrainageCalculator = () => {
             <Highlight>{(trenchLength / 1000).toFixed(2)} m</Highlight>
           </Typography>
           <Typography variant="body1">
+            Geotextile Fabric:{" "}
+            <Highlight color="orange">
+              {((trenchLength * 2) / 1000).toFixed(2)} m
+            </Highlight>
+          </Typography>
+          <Typography variant="body1">
             Excavation Volume:{" "}
             <Highlight color="blue">{result.excavationVolume} m³</Highlight>
           </Typography>
@@ -227,4 +207,4 @@ const DrainageCalculator = () => {
   );
 };
 
-export default DrainageCalculator;
+export default StormwaterDrainageCalculator;
